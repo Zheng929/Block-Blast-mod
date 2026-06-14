@@ -7,16 +7,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: update-blockblastsolver-main
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Find project
-        run: |
-          ls
-          find . -name gradlew
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
-      - name: Upload scan
+      - name: Grant permission
+        run: chmod +x gradlew
+
+      - name: Build APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: scan
-          path: .
+          name: app-debug
+          path: update-blockblastsolver-main/app/build/outputs/apk/debug/*.apk
